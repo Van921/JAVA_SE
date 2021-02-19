@@ -33,7 +33,6 @@ public class ClientHandler implements Runnable{
 
             //2处理请求
             String path = request.getUri();
-            System.out.println("抽象路径："+path);
 
             //若该资源存在并且是一个文件，则正常响应
             File file = new File("./webapps"+path);
@@ -78,7 +77,7 @@ public class ClientHandler implements Runnable{
                 while ((len = fis.read(buf))!=-1){
                     out.write(buf,0,len);
                 }
-            //若资源不存在则响应404
+                //若资源不存在则响应404
             }else{
                 System.out.println("该资源不存在！");
                 File notFoundFile = new File("./webapps/root/404.html");
@@ -91,7 +90,7 @@ public class ClientHandler implements Runnable{
              */
                 OutputStream out = socket.getOutputStream();
                 //1：发送状态行：
-                String line = "HTTP/1.1 200 OK";
+                String line = "HTTP/1.1 404 NotFound";
                 byte[] data = line.getBytes("ISO8859-1");
                 out.write(data);
                 out.write(13);//单独发送回车符
@@ -104,7 +103,7 @@ public class ClientHandler implements Runnable{
                 out.write(13);
                 out.write(10);
 
-                line = "Content-Length: " + file.length();
+                line = "Content-Length: " + notFoundFile.length();
                 data = line.getBytes("ISO8859-1");
                 out.write(data);
                 out.write(13);
@@ -116,7 +115,7 @@ public class ClientHandler implements Runnable{
 
                 //3:发送响应正(文件内容)
                 //创建文件输入流读取要发送的文件数据
-                FileInputStream fis = new FileInputStream(file);
+                FileInputStream fis = new FileInputStream(notFoundFile);
                 int len;//每次读取的字节数
                 byte[] buf =new byte[1024*10];//10KB字节数组
                 while ((len = fis.read(buf))!=-1){
