@@ -30,6 +30,17 @@ public class RegServlet {
         String password = request.getParameter("password");
         String nickname = request.getParameter("nickname");
         String ageStr = request.getParameter("age");
+        /*
+            必要的验证工作，如果上述四项有空的，或者年龄不是一个数字时，直接响应给客户端一个注册错误
+            的提示页面：reg_info_error.html，里面居中显示一行字：注册信息输入有误，请重新注册。
+            注：该页面也放在webapps/myweb这个网络应用中
+         */
+        if (username==null||password==null||nickname==null||ageStr==null||!ageStr.matches("[0-9]+")){
+            File file = new File("./webapps/myweb/error.html");
+            response.setEntity(file);
+            return;
+        }
+
 
         int age = Integer.parseInt(ageStr);//将年龄转换为int值
         System.out.println(username+","+password+","+nickname+","+age);
@@ -40,6 +51,27 @@ public class RegServlet {
          */
         try {
             RandomAccessFile raf = new RandomAccessFile("user.dat","rw");
+            /*
+                验证是否为重复用户
+                先读取user.dat文件中现有的所有用户名字，并与本次注册的用户名比对，如果存在则
+                直接响应页面:have_user.html,居中一行字:该用户已存在，请重新注册
+                否则才进行注册操作
+             */
+            for (int i =0;i<raf.length()/100;i++){
+                raf.seek(i*100);
+                byte[] data = new byte[32];
+                raf.read(data);//读取每条记录的前32字节
+                String name = new String(data,"UTF-8").trim();
+                if (username.equals(name)){
+                    File file = new File("./webapps/myweb/have_user.html");
+                    response.setEntity(file);
+                    return;
+                }
+            }
+
+
+
+
             raf.seek(raf.length());
 
             byte[] data = username.getBytes("UTF-8");
@@ -58,8 +90,12 @@ public class RegServlet {
             System.out.println("注册完毕！");
 
             //3
-            File file = new File("./webapps/myweb/reg.success.html");
-            response.setEntity(file);
+
+
+                File file = new File("./webapps/myweb/reg.success.html");
+                response.setEntity(file);
+
+
 
 
         } catch (IOException e) {
