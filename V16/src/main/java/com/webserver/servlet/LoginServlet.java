@@ -1,14 +1,11 @@
-package com.webserver.Servlet;
+package com.webserver.servlet;
 
 import com.webserver.http.HttpRequest;
 import com.webserver.http.HttpResponse;
 
-import javax.crypto.spec.PSource;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.Arrays;
 
 public class LoginServlet {
     public void service(HttpRequest request, HttpResponse response){
@@ -26,33 +23,27 @@ public class LoginServlet {
 
 
         try {
-            RandomAccessFile raf = new RandomAccessFile("user.dat","rw");
+            RandomAccessFile raf = new RandomAccessFile("user.dat","r");
 
-            for (int i = 0; i < raf.length(); i++) {
+            for (int i = 0; i < raf.length()/100; i++) {
                 raf.seek(i*100);
                 byte[] data = new byte[32];
                 raf.read(data);
                 String name = new String(data,"UTF-8").trim();
-                if (username.equals(name)){
-                    File file = new File("./webapps/myweb/have_user.html");
-                    response.setEntity(file);
-
+                if (username.equals(username)){
+                    raf.read(data);//读取密码
+                    String pwd = new String(data,"UTF-8").trim();
+                    if (pwd.equals(password)) {
+                        File file = new File("./webapps/myweb/login_success.html");
+                        response.setEntity(file);
+                        return;
+                    }
+                    break;
                 }
             }
 
-            raf.seek(raf.length());
 
-            byte[] data = username.getBytes("UTF-8");
-            data = Arrays.copyOf(data,32);
-            raf.write(data);
-
-            data = password.getBytes("UTF-8");
-            data = Arrays.copyOf(data,32);
-            raf.write(data);
-
-            System.out.println("注册完毕！！！");
-
-            File file = new File("./webapps/myweb/reg.success.html");
+            File file = new File("./webapps/myweb/login_fail.html");
             response.setEntity(file);
 
 

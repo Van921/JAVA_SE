@@ -1,4 +1,4 @@
-package com.webserver.Servlet;
+package com.webserver.servlet;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;

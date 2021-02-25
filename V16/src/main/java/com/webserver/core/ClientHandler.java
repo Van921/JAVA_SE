@@ -1,15 +1,15 @@
 package com.webserver.core;
 
-import com.webserver.Servlet.RegServlet;
+import com.webserver.servlet.LoginServlet;
+import com.webserver.servlet.RegServlet;
 import com.webserver.http.EmptyRequestException;
-import com.webserver.http.HttpContext;
 import com.webserver.http.HttpRequest;
 import com.webserver.http.HttpResponse;
+import com.webserver.servlet.ShowAllUserDemo;
+import com.webserver.servlet.ShowAllUserServlet;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 负责与指定客户端进行HTTP交互
@@ -37,10 +37,14 @@ public class ClientHandler implements Runnable{
             if ("/myweb/regUser".equals(path)) {
                 //处理注册业务
                 RegServlet servlet = new RegServlet();
+                servlet.service(request, response);
+            } else if ("/myweb/loginUser".equals(path)) {
+                LoginServlet servlet = new LoginServlet();
+                servlet.service(request, response);
+            }else if ("/myweb/showAllUser".equals(path)){
+                ShowAllUserServlet servlet = new ShowAllUserServlet();
                 servlet.service(request,response);
-            }else if("/myweb/loginUser".equals(path)){
-                RegServlet servlet = new RegServlet();
-                servlet.service(request,response);
+
             }else{
                 File file = new File("./webapps" + path);
 

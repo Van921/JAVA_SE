@@ -1,15 +1,12 @@
 package com.webserver.core;
 
-import com.webserver.Servlet.RegServlet;
+import com.webserver.servlet.RegServlet;
 import com.webserver.http.EmptyRequestException;
-import com.webserver.http.HttpContext;
 import com.webserver.http.HttpRequest;
 import com.webserver.http.HttpResponse;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 负责与指定客户端进行HTTP交互

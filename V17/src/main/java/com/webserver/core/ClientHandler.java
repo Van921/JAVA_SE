@@ -1,5 +1,6 @@
 package com.webserver.core;
 
+import com.webserver.servlet.LoginServlet;
 import com.webserver.servlet.RegServlet;
 import com.webserver.http.EmptyRequestException;
 import com.webserver.http.HttpRequest;
@@ -35,8 +36,10 @@ public class ClientHandler implements Runnable{
                 //处理注册业务
                 RegServlet servlet = new RegServlet();
                 servlet.service(request,response);
-            } else{
-
+            }else if("/myweb/loginUser".equals(path)){
+                LoginServlet servlet = new LoginServlet();
+                servlet.service(request,response);
+            }else{
                 File file = new File("./webapps" + path);
 
 

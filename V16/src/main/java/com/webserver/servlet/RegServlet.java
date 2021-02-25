@@ -1,14 +1,12 @@
-package com.webserver.Servlet;
+package com.webserver.servlet;
 
 import com.webserver.http.HttpRequest;
 import com.webserver.http.HttpResponse;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
-import java.util.Scanner;
 
 /**
  * Servlet是JavaEE标准中的一个借口，意思是运行在服务端的小程序

@@ -22,15 +22,6 @@ public class HttpResponse {
 
     //响应正文相关信息
     private File entity;//响应正文对应的实体文件
-    /*
-        java.io.ByteArrayOutputStream是一个低级流，其内部维护一个字节数组，通过当前流写出的数据
-        实际上就是保存在内部的字节数组上了。
-     */
-    private ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    private PrintWriter writer = new PrintWriter(baos);
-
-
-
 
 
     private Socket socket;
@@ -104,20 +95,6 @@ public class HttpResponse {
     //3：发送响应正文
     private void sendContent() {
         System.out.println("HttpResponse:开始发送响应正文...");
-        //先查看ByteArrayOutputStream中是否有数据，如果有则把这些数据作为正文发送
-        writer.flush();//先确保通过PrintWriter写出的内容都写入ByteArrayOutStream内部数组上
-        byte[] data = baos.toByteArray();//通过ByteArrayOutputSteam得到其内部的字节数组
-        if (data.length>0){//若存在数据，则将它作为正文回复客户端
-            try {
-                OutputStream out = socket.getOutputStream();
-                out.write(data);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-
         if (entity != null) {
             try (
                     OutputStream out = socket.getOutputStream();
@@ -184,15 +161,6 @@ public class HttpResponse {
 
     public void setStatusReason(String statusReason) {
         StatusReason = statusReason;
-    }
-
-    /**
-     * 对外提供一个缓冲字符输出流，通过这个输出流写出的字符串最终都会写入当前响应对象的属性：
-     * private ByteArrayOutputStream baos中，这相当于写入到该对象内部维护的字节数组中了。
-     * @return
-     */
-    public PrintWriter getWriter(){
-        return writer;
     }
 
 
