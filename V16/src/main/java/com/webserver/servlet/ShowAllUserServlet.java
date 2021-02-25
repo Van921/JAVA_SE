@@ -72,6 +72,10 @@ public class ShowAllUserServlet {
 
             System.out.println("页面生成完毕！");
 
+            //设置正文类型，告知浏览器它是一个页面
+            response.setContentType("text/html");
+
+
 
 
 

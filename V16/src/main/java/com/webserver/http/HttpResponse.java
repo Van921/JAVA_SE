@@ -46,10 +46,27 @@ public class HttpResponse {
         /*
             发送一个响应时，按顺序发送状态行，响应头，响应正文
          */
+        beforeFlush();
         sendStatusLine();
         sendHeaders();
         sendContent();
     }
+
+    /**
+     * 开始发送前的所有准备操作
+     */
+    private void beforeFlush(){
+        //如果是通过PrintWriter形式写入的正文，这里要根据写入的数据设置Content-Length
+        if(entity==null){//前提是没有以文件形式设置过正文
+            writer.flush();//先确保通过PrintWriter写出的内容都写入ByteArrayOutStream内部数组上
+            byte[] data = baos.toByteArray();
+            this.putHeader("Content-Length",data.length+"");
+
+        }
+    }
+
+
+
 
     //1：发送状态行
     private void sendStatusLine() {
@@ -105,7 +122,6 @@ public class HttpResponse {
     private void sendContent() {
         System.out.println("HttpResponse:开始发送响应正文...");
         //先查看ByteArrayOutputStream中是否有数据，如果有则把这些数据作为正文发送
-        writer.flush();//先确保通过PrintWriter写出的内容都写入ByteArrayOutStream内部数组上
         byte[] data = baos.toByteArray();//通过ByteArrayOutputSteam得到其内部的字节数组
         if (data.length>0){//若存在数据，则将它作为正文回复客户端
             try {
@@ -195,5 +211,12 @@ public class HttpResponse {
         return writer;
     }
 
+    /**
+     * 设置响应头Content-Type的值
+     * @param value
+     */
+    public void setContentType(String value){
+        this.headers.put("Content-Type",value);
+    }
 
 }

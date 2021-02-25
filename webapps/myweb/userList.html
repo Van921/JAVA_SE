@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>用户列表</title>
@@ -13,12 +13,23 @@
                 <td>密码</td>
                 <td>昵称</td>
                 <td>年龄</td>
+                <td>操作</td>
             </tr>
-            <tr>
-                <td>fanchuanqi</td>
-                <td>123456</td>
-                <td>fancq</td>
-                <td>22</td>
+
+            <tr th:each="user:${list}"> <!--$(key)与context.setVariable("key",xxxx)对应-->
+                <td th:text="${user.username}">曹操</td><!--th:text=""用于当前标签中间的文本缓冲该属性的值-->
+                <td th:text="${user.password}">123456</td>
+                <td th:text="${user.nickname}">阿瞒</td>
+                <td th:text="${user.age}">31</td>
+<!--                生成href的内容为:./toUpdate?username=该用户名-->
+                <td><a href="#" th:href="@{'./toUpdate?username='+${user.username}}">修改信息</a></td>
+            </tr>
+            <tr th:remove="all"><!--th:remove="all"，生成动态页面时这个标签及其子标签全忽略-->
+                <td>刘备</td>
+                <td>5566</td>
+                <td>玄德</td>
+                <td>28</td>
+                <td><a href="#">修改信息</a></td>
             </tr>
         </table>
     </center>
